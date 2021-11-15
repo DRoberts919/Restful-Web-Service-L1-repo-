@@ -1,4 +1,4 @@
-package edu.neumont.Dylan.Roberts.services;
+package edu.neumont.Dylan.Roberts.ws.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,8 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class ImageService {
+
+    //Service to return selected image.
     public BufferedImage getBufferedImage(String name) throws IOException {
 
         BufferedImage bImage;
@@ -53,38 +55,36 @@ public class ImageService {
 
     }
 
-
+    //service to get back the image from the MOCK DB
     public byte[] getImage(String name) throws IOException {
         BufferedImage image = getBufferedImage(name);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", bos);
         byte[] data = bos.toByteArray();
-
-
         return data;
     }
 
 
-
-
+    //Service to grayScale image and then return the image as a new image
+    //making sure not to override original image
     public byte[] grayScaleImage(String name) throws IOException {
         BufferedImage image = getBufferedImage(name);
         int width = image.getWidth();
         int height = image.getHeight();
 
-        for(int i=0; i<height; i++) {
+        for (int i = 0; i < height; i++) {
 
-            for(int j=0; j<width; j++) {
+            for (int j = 0; j < width; j++) {
 
                 Color c = new Color(image.getRGB(j, i));
-                int red = (int)(c.getRed() * 0.299);
-                int green = (int)(c.getGreen() * 0.587);
-                int blue = (int)(c.getBlue() *0.114);
-                Color newColor = new Color(red+green+blue,
+                int red = (int) (c.getRed() * 0.299);
+                int green = (int) (c.getGreen() * 0.587);
+                int blue = (int) (c.getBlue() * 0.114);
+                Color newColor = new Color(red + green + blue,
 
-                        red+green+blue,red+green+blue);
+                        red + green + blue, red + green + blue);
 
-                image.setRGB(j,i,newColor.getRGB());
+                image.setRGB(j, i, newColor.getRGB());
             }
         }
 
@@ -96,26 +96,26 @@ public class ImageService {
 
     }
 
-    public byte[] roatateImage(String name ) throws IOException{
+    //Service to rotate image and then return the image as a new image
+    //making sure not to override original image
+    public byte[] rotateImage(String name) throws IOException {
         BufferedImage image = getBufferedImage(name);
         int width = image.getWidth();
         int height = image.getHeight();
 
-        BufferedImage rotateImage = new BufferedImage(image.getWidth(),image.getHeight(),image.getType());
+        BufferedImage rotateImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
         Graphics2D g2 = rotateImage.createGraphics();
 
-        g2.rotate(Math.toRadians(90),width /2, height /2);
+        g2.rotate(Math.toRadians(90), width / 2, height / 2);
 
-        g2.drawImage(image,null,0,0);
+        g2.drawImage(image, null, 0, 0);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(rotateImage, "png", bos);
         byte[] data = bos.toByteArray();
 
         return data;
-
-
     }
 
 

@@ -1,6 +1,6 @@
-package edu.neumont.Dylan.Roberts.contorllers;
+package edu.neumont.Dylan.Roberts.ws.contorllers;
 
-import edu.neumont.Dylan.Roberts.services.ImageService;
+import edu.neumont.Dylan.Roberts.ws.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.io.IOException;
 @RestController
 public class FileController {
 
-    private ImageService service;
+    private final ImageService service;
 
     @Autowired
     public FileController(ImageService service) {
@@ -37,10 +37,10 @@ public class FileController {
                         image = service.grayScaleImage(name);
                         break;
                     case "rotate":
-                        image = service.roatateImage(name);
+                        image = service.rotateImage(name);
                         break;
                 }
-            }else{
+            } else {
                 image = service.getImage(name);
             }
 
@@ -51,15 +51,15 @@ public class FileController {
         }
     }
 
-
     @PostMapping("/image")
     public ResponseEntity<String> createImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
         String imageName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
         String imageDirectory = "images/";
 
         try {
             service.createImage(imageDirectory, imageName, multipartFile);
-            return new ResponseEntity<String>("image saved", HttpStatus.OK);
+            return new ResponseEntity<String>(imageName, HttpStatus.OK);
 
         } catch (IOException ioe) {
             System.out.println(ioe);

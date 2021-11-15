@@ -1,4 +1,4 @@
-package edu.neumont.Dylan.Roberts;
+package edu.neumont.Dylan.Roberts.ws;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
